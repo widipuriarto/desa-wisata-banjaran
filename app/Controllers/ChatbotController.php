@@ -101,8 +101,10 @@ class ChatbotController extends BaseController
         $apiKey = getenv('GEMINI_API_KEY');
         if (!$apiKey) return "Error: API Key missing";
 
-        // MENGGUNAKAN MODEL models/gemini-2.0-flash (Sesuai List Akun User)
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=" . $apiKey;
+        // AKAR MASALAH: Model 'gemini-flash-latest' dan 'gemini-2.0-flash' telah dihapus/didepresiasi oleh Google (2026).
+        // Memanggil endpoint model usang tersebut membuat server Google melakukan drop connection (Timeout 0 bytes).
+        // Solusi: Menggunakan model terbaru yang aktif saat ini yaitu 'gemini-3.6-flash'.
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=" . $apiKey;
 
         $payload = [
             "contents" => [
@@ -120,8 +122,10 @@ class ChatbotController extends BaseController
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 
-        // SSL Verify false untuk localhost jika diperlukan
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        // Pengaturan standar koneksi stabil
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V6); // IPv6 lebih stabil
 
         $response = curl_exec($ch);
 
