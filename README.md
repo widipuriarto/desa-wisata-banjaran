@@ -1,6 +1,6 @@
 # Desa Wisata Banjaran - Smart Tourism Platform
 
-**Website Link:** http://desabanjaran.epizy.com
+**Website Link:** https://desawisatabanjaran.infinityfreeapp.com/
 
 ## About Project
 
